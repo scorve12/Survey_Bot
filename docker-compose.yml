@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  helloMyFmaily:  # helloMyFmaily 서비스를 정의
+    user: "root"
+    image: httpd
+    restart: always
+    ports:  # 호스트와 컨테이너의 포트를 매핑
+      - "80:80" 
+    volumes:  # 볼륨을 설정
+      - ./var/www/html:/usr/local/apache2/htdocs
