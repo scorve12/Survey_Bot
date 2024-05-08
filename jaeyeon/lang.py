@@ -28,9 +28,9 @@ loader = PyPDFLoader("https://www.kihasa.re.kr/hswr/assets/pdf/1037/journal-37-2
 pages = loader.load_and_split()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
 splits = text_splitter.split_documents(pages)
-vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings(openai_api_key='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'))
+vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings(openai_api_key='sk-key'))
 
-llm = ChatOpenAI(openai_api_key='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', model="gpt-4")  # Use GPT-4
+llm = ChatOpenAI(openai_api_key='sk-key', model="gpt-4")  # Use GPT-4
 retriever = vectorstore.as_retriever()
 
 
