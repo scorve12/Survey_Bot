@@ -2,13 +2,16 @@ import pygame
 import glob
 import time
 import sounddevice as sd
-import numpy as np
+
+import pandas as pd
 from scipy.io.wavfile import write
 import whisper
 import tempfile
 import warnings
 import os
+from transformers import pipeline
 
+classifier = pipeline("text-classification", model="matthewburke/korean_sentiment")
 
 # pygame 라이브러리 초기화
 pygame.init()
@@ -22,18 +25,16 @@ audio_files = glob.glob(audio_files_pattern)
 
 sample_rate = 44100  # 녹음 샘플링 비율
 duration = 5  # 녹음할 시간(초)
-respronse=[]
+respronse_text=[]
 
 # 모든 음성 파일을 순차적으로 재생
-for audio_file in audio_files[:3]:
-    #print(f"Playing {audio_file}...")
+for audio_file in audio_files[:1]:
     pygame.mixer.music.load(audio_file)
     pygame.mixer.music.play()
     # 재생이 완료될 때까지 대기
     
     while pygame.mixer.music.get_busy():
         pygame.time.Clock().tick(10)
-    #print(f"Finished playing {audio_file}.")
     
     print("녹음을 시작합니다. 말씀해주세요...")
     recording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=2)
@@ -55,12 +56,23 @@ for audio_file in audio_files[:3]:
 
 
     # 결과 출력 및 임시 파일 정리
-    respronse.append(result["text"])
+    respronse_text.append(result["text"])
     print("인식된 텍스트:", result["text"])
     os.remove(audio_file)  # 임시 오디오 파일 삭제
     os.rmdir(temp_dir)  # 임시 디렉토리 삭제
+
+pred_respronse=[]
+for r in respronse_text:
+    print(r)
+    preds =classifier(r, return_all_scores=True)
+    is_positive = preds[0][1]['score'] > 0.5
+    pred_respronse.append(is_positive)
     
+respronse=[1 if x else 0 for x in pred_respronse]
 
+data=pd.read_csv('D:\Project\Survey_Bot\CSV\sample_survey_answer.csv')
+data['답변']=respronse
 
-# pygame 종료
+data.to_csv('D:\\Project\\Survey_Bot\\User_result\\sample_test.csv', index=False)
+
 pygame.quit()
