@@ -3,8 +3,8 @@ import pandas as pd
 from openai import OpenAI
 
 # 환경 변수에서 API 키 불러오기
-api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key="sk-key")
+#api_key = os.getenv("OPENAI_API_KEY")
+#client = OpenAI(api_key="sk-key")
 
 # 음성 파일 경로와 파일 이름 설정
 audio_file_base_path = "tts_audio"
