@@ -18,7 +18,7 @@ from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains import ConversationalRetrievalChain
 
-data=pd.read_csv('D:\Project\Survey_Bot\User_result\sample_test.csv')
+data=pd.read_csv('.\User_result\sample_test.csv')
 
 masking=(data['답변']==1)
 yes_data=data[masking]['질문사항'].to_list()

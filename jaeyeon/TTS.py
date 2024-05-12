@@ -3,14 +3,14 @@ import pandas as pd
 from openai import OpenAI
 
 # 환경 변수에서 API 키 불러오기
-#api_key = os.getenv("OPENAI_API_KEY")
-#client = OpenAI(api_key="sk-key")
+#TODO: key 수정 요청
+client = OpenAI.api_key = (os.getenv("OPENAI_API_KEY"))
 
 # 음성 파일 경로와 파일 이름 설정
 audio_file_base_path = "tts_audio"
 
 # 설문 데이터프레임 로드 (예시: CSV 파일로부터)
-survey = pd.read_csv(r"D:\Project\Survey_Bot\CSV\대인관계 패턴의 자기이해 척도.csv", index_col=False)
+survey = pd.read_csv(r".\CSV\대인관계 패턴의 자기이해 척도.csv", index_col=False)
 
 # 음성 파일 생성
 for idx, q in enumerate(survey['질문'].to_list()):
