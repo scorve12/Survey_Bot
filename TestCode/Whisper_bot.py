@@ -64,8 +64,12 @@ for audio_file in audio_files[:1]:
 pred_respronse=[]
 for r in response_text:
     print(r)
-    preds =classifier(r, return_all_scores=True)
-    is_positive = preds[0][1]['score'] > 0.5
+    preds =classifier(r, return_all_scores=True) # top_k=None
+    print(preds)
+    #is_positive = preds[0][1]['score'] > 0.5
+    #TODO top
+    #is_positive = next((item for item in preds[0] if item['label'] == 'LABEL_1'), None)['score'] > 0.5
+    
     pred_respronse.append(is_positive)
     
 response=[1 if x else 0 for x in pred_respronse]
