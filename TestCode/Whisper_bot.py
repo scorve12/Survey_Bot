@@ -18,14 +18,14 @@ pygame.init()
 pygame.mixer.init()
 
 # 음성 파일이 저장된 폴더 경로와 패턴
-audio_files_pattern = r'D:\Project\Survey_Bot\audio\*.mp3'
+audio_files_pattern = r'audio\*.mp3'
 
 # glob을 사용하여 폴더 내의 모든 mp3 파일 목록을 가져옵니다.
 audio_files = glob.glob(audio_files_pattern)
 
 sample_rate = 44100  # 녹음 샘플링 비율
 duration = 5  # 녹음할 시간(초)
-respronse_text=[]
+response_text=[]
 
 # 모든 음성 파일을 순차적으로 재생
 for audio_file in audio_files[:1]:
@@ -56,23 +56,26 @@ for audio_file in audio_files[:1]:
 
 
     # 결과 출력 및 임시 파일 정리
-    respronse_text.append(result["text"])
+    response_text.append(result["text"])
     print("인식된 텍스트:", result["text"])
     os.remove(audio_file)  # 임시 오디오 파일 삭제
     os.rmdir(temp_dir)  # 임시 디렉토리 삭제
 
 pred_respronse=[]
-for r in respronse_text:
+for r in response_text:
     print(r)
     preds =classifier(r, return_all_scores=True)
     is_positive = preds[0][1]['score'] > 0.5
     pred_respronse.append(is_positive)
     
-respronse=[1 if x else 0 for x in pred_respronse]
+response=[1 if x else 0 for x in pred_respronse]
 
-data=pd.read_csv('D:\Project\Survey_Bot\CSV\sample_survey_answer.csv')
-data['답변']=respronse
+print(response)
+print(pred_respronse)
 
-data.to_csv('D:\\Project\\Survey_Bot\\User_result\\sample_test.csv', index=False)
+data=pd.read_csv('CSV/sample_survey_answer.csv')
+data['답변']=response
+
+data.to_csv('User_result/sample_test.csv', index=False)
 
 pygame.quit()
