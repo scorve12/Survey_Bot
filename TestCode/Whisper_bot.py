@@ -11,6 +11,7 @@ import warnings
 import os
 from transformers import pipeline
 
+
 classifier = pipeline("text-classification", model="matthewburke/korean_sentiment")
 
 # pygame 라이브러리 초기화
@@ -61,21 +62,20 @@ for audio_file in audio_files[:1]:
     os.remove(audio_file)  # 임시 오디오 파일 삭제
     os.rmdir(temp_dir)  # 임시 디렉토리 삭제
 
-pred_respronse=[]
-for r in response_text:
-    print(r)
-    preds =classifier(r, return_all_scores=True) # top_k=None
-    print(preds)
-    #is_positive = preds[0][1]['score'] > 0.5
+pred_response=[]
+for text in response_text:
+    print(text)
+    preds =classifier(text, top_k=None)
+    
+    print(preds[0]['score'] > 0.5)
+    is_positive = preds[0]['score'] > 0.5
+    pred_response.append(is_positive)
     #TODO top
     #is_positive = next((item for item in preds[0] if item['label'] == 'LABEL_1'), None)['score'] > 0.5
     
-    pred_respronse.append(is_positive)
-    
-response=[1 if x else 0 for x in pred_respronse]
+response=[1 if x else 0 for x in pred_response]
 
-print(response)
-print(pred_respronse)
+print(pred_response)
 
 data=pd.read_csv('CSV/sample_survey_answer.csv')
 data['답변']=response
