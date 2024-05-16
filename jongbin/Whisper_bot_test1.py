@@ -46,8 +46,6 @@ audio_files_pattern = os.path.join(OUTPUT_DIR, '*.mp3')
 # glob을 사용하여 폴더 내의 모든 mp3 파일 목록을 가져옵니다.
 audio_files = glob.glob(audio_files_pattern)
 
-sample_rate = 44100  # 녹음 샘플링 비율
-duration = 5  # 녹음할 시간(초)
 response_text = []
 
 # 모든 음성 파일을 순차적으로 재생
@@ -60,14 +58,14 @@ for audio_file in audio_files[:1]:
         pygame.time.Clock().tick(10)
 
     print("녹음을 시작합니다. 말씀해주세요...")
-    recording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=2)
+    recording = sd.rec(int(DURATION * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=2)
     sd.wait()  # 녹음이 끝날 때까지 대기
     print("녹음이 완료되었습니다.")
 
     # 임시 파일로 녹음된 오디오 저장
     temp_dir = tempfile.mkdtemp()
     audio_file = os.path.join(temp_dir, "recording.wav")
-    write(audio_file, sample_rate, recording)  # 녹음된 오디오를 WAV 파일로 저장
+    write(audio_file, SAMPLE_RATE, recording)  # 녹음된 오디오를 WAV 파일로 저장
 
     # Whisper 모델 로드 및 오디오 파일 변환
     model = whisper.load_model(WHISPER_MODEL)
