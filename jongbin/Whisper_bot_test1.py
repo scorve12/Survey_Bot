@@ -9,10 +9,20 @@ from transformers import pipeline
 from configparser import ConfigParser
 import logging
 import pandas as pd
+import pygame
+
+
 
 # 설정 파일 로드
 config = ConfigParser()
-config.read('config.ini')
+# 설정 파일 로드
+config.read('config.ini', encoding='utf-8')
+
+classifier = pipeline("text-classification", model="matthewburke/korean_sentiment")
+
+# pygame 라이브러리 초기화
+pygame.init()
+pygame.mixer.init()
 
 # 로그 설정
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -40,11 +50,14 @@ sample_rate = 44100  # 녹음 샘플링 비율
 duration = 5  # 녹음할 시간(초)
 response_text = []
 
-# 모든 음성 파일을 순차적으로 처리
+# 모든 음성 파일을 순차적으로 재생
 for audio_file in audio_files[:1]:
-    # 녹음된 음성 파일을 재생
-    sd.play(sd.decode_file(audio_file, samplerate=SAMPLE_RATE), samplerate=SAMPLE_RATE)
-    sd.wait()
+    pygame.mixer.music.load(audio_file)
+    pygame.mixer.music.play()
+    # 재생이 완료될 때까지 대기
+    
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
 
     print("녹음을 시작합니다. 말씀해주세요...")
     recording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=2)
@@ -89,3 +102,5 @@ data['답변'] = response
 
 data.to_csv(RESULT_FILE, index=False)
 logger.info(f"결과가 {RESULT_FILE}에 저장되었습니다.")
+
+pygame.quit()

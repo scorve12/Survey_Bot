@@ -1,5 +1,5 @@
 sounddevice
 scipy
-whisper
+openai-whisper
 transformers
 pandas
