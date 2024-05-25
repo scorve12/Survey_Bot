@@ -40,6 +40,18 @@ classifier = pipeline("text-classification", model=SENTIMENT_MODEL)
 def index():
     return render_template('index.html')
 
+@app.route('/get_config', methods=['GET'])
+def get_config():
+    try:
+        config_data = {
+            'DURATION': DURATION,
+            'SAMPLE_RATE': SAMPLE_RATE
+        }
+        return jsonify(config_data)
+    except Exception as e:
+        logger.exception("An error occurred while getting config data.")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/get_questions', methods=['GET'])
 def get_questions():
     try:

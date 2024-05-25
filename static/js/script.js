@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const DURATION = 5; // 녹음 지속 시간을 초 단위로 설정합니다. 예를 들어 5초로 설정합니다.
+
   const startButton = document.getElementById("start-survey");
   const nextButton = document.getElementById("next-question");
 
@@ -16,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch("/get_questions")
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
@@ -31,8 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
         function processNextQuestion() {
           if (currentQuestion < questions.length) {
             let question = questions[currentQuestion];
-            questionDiv.innerHTML = `<p><b>질문 ${currentQuestion + 1}:</b> ${question.question}</p>`;
-            recordingStatusDiv.innerHTML = '';
+            questionDiv.innerHTML = `<p><b>질문 ${currentQuestion + 1}:</b> ${
+              question.question
+            }</p>`;
+            recordingStatusDiv.innerHTML = "";
 
             let audio = new Audio(question.audio);
             audio.play();
@@ -42,58 +46,64 @@ document.addEventListener("DOMContentLoaded", () => {
               console.log("질문에 대한 응답을 해주세요.");
 
               // 녹음 시작
-              navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
+              navigator.mediaDevices
+                .getUserMedia({ audio: true })
+                .then((stream) => {
                   const mediaRecorder = new MediaRecorder(stream);
                   const audioChunks = [];
 
-                  mediaRecorder.ondataavailable = event => {
+                  mediaRecorder.ondataavailable = (event) => {
                     audioChunks.push(event.data);
                   };
 
                   mediaRecorder.onstop = () => {
                     const audioBlob = new Blob(audioChunks);
                     const formData = new FormData();
-                    formData.append('audio', audioBlob, 'response.wav');
+                    formData.append("audio", audioBlob, "response.wav");
 
                     recordingStatusDiv.innerHTML = `<p>녹음을 마칩니다.</p>`;
                     console.log("녹음을 마칩니다.");
 
                     // 서버에 녹음 요청
-                    fetch('/record_response', {
-                      method: 'POST',
+                    fetch("/record_response", {
+                      method: "POST",
                       headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json",
                       },
-                      body: JSON.stringify({ question_id: currentQuestion })
+                      body: JSON.stringify({ question_id: currentQuestion }),
                     })
-                      .then(response => response.json())
-                      .then(responseData => {
+                      .then((response) => response.json())
+                      .then((responseData) => {
                         if (responseData.error) {
                           alert(responseData.error);
                           recordingStatusDiv.innerHTML = `<p>${responseData.error}</p>`;
                           return;
                         }
 
-                        responseDiv.innerHTML += `<p><b>응답 ${currentQuestion + 1}:</b> ${responseData.response} (${responseData.sentiment})</p>`;
-                        totalScore += responseData.sentiment === 'positive' ? 1 : 0;
+                        responseDiv.innerHTML += `<p><b>응답 ${
+                          currentQuestion + 1
+                        }:</b> ${responseData.response} (${
+                          responseData.sentiment
+                        })</p>`;
+                        totalScore +=
+                          responseData.sentiment === "positive" ? 1 : 0;
                         currentQuestion++;
-                        nextButton.style.display = 'block';
+                        nextButton.style.display = "block";
                       })
-                      .catch(error => {
+                      .catch((error) => {
                         console.error("Error:", error);
-                        alert('서버와의 통신 중 오류가 발생했습니다.');
+                        alert("서버와의 통신 중 오류가 발생했습니다.");
                       });
                   };
 
                   mediaRecorder.start();
                   setTimeout(() => {
                     mediaRecorder.stop();
-                  }, DURATION * 1000);
+                  }, DURATION * 1000); // DURATION을 사용하여 녹음 지속 시간을 설정합니다.
                 })
-                .catch(error => {
+                .catch((error) => {
                   console.error("Error:", error);
-                  alert('녹음 장치를 사용할 수 없습니다.');
+                  alert("녹음 장치를 사용할 수 없습니다.");
                 });
             };
           } else {
@@ -102,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         nextButton.addEventListener("click", () => {
-          nextButton.style.display = 'none';
+          nextButton.style.display = "none";
           processNextQuestion();
         });
 
@@ -110,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        alert('질문을 불러오는 중 오류가 발생했습니다.');
+        alert("질문을 불러오는 중 오류가 발생했습니다.");
       });
   });
 });
