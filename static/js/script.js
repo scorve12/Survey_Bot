@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let DURATION;
+  let DURATION; // 기본값 설정을 제거하고 서버에서 값을 가져옵니다.
 
   // 서버에서 설정 값을 가져옵니다.
   fetch("/get_config")
     .then((response) => response.json())
     .then((config) => {
-      DURATION = config.DURATION;
+      DURATION = config.DURATION; // 서버에서 가져온 설정 값을 사용합니다.
       console.log(`DURATION 설정 값: ${DURATION}`);
 
       const startButton = document.getElementById("start-survey");
@@ -41,6 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
             function processNextQuestion() {
               if (currentQuestion < questions.length) {
                 let question = questions[currentQuestion];
+
+                // 화면을 초기화합니다.
+                questionDiv.innerHTML = "";
+                responseDiv.innerHTML = "";
+                recordingStatusDiv.innerHTML = "";
+
                 questionDiv.innerHTML = `<p><b>질문 ${
                   currentQuestion + 1
                 }:</b> ${question.question}</p>`;
@@ -90,7 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
                               return;
                             }
 
-                            responseDiv.innerHTML += `<p><b>응답 ${
+                            // 프론트에서 결과를 보여주지만, 다음 질문으로 넘어가면 지워집니다.
+                            responseDiv.innerHTML = `<p><b>응답 ${
                               currentQuestion + 1
                             }:</b> ${responseData.response} (${
                               responseData.sentiment
@@ -98,6 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             totalScore +=
                               responseData.sentiment === "positive" ? 1 : 0;
                             currentQuestion++;
+
+                            // 다음 질문 버튼을 표시합니다.
                             nextButton.style.display = "block";
                           })
                           .catch((error) => {
