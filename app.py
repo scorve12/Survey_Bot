@@ -25,9 +25,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 logger = logging.getLogger(__name__)
 
 # 설정 변수
-OUTPUT_DIR = os.path.join(BASE_DIR, config.get('paths', 'output_dir'))
-RESULT_FILE = os.path.join(BASE_DIR, config.get('paths', 'result_file'))
-TEXTS_FILE = os.path.join(BASE_DIR, config.get('paths', 'texts_file'))
+OUTPUT_DIR = os.path.join(BASE_DIR, config.get('paths', 'output_dir').replace('/', os.sep))
+RESULT_FILE = os.path.join(BASE_DIR, config.get('paths', 'result_file').replace('/', os.sep))
+TEXTS_FILE = os.path.join(BASE_DIR, config.get('paths', 'texts_file').replace('/', os.sep))
 DURATION = config.getint('audio', 'duration')
 SAMPLE_RATE = config.getint('audio', 'sample_rate')
 WHISPER_MODEL = config.get('models', 'whisper_model')
@@ -95,6 +95,7 @@ def record_response():
         result = model.transcribe(temp_audio_file, fp16=False)
 
         response_text = result["text"]
+        logger.debug(f'Transcribed text: {response_text}')
         os.remove(temp_audio_file)  # 임시 오디오 파일 삭제
         os.rmdir(temp_dir)  # 임시 디렉토리 삭제
 
@@ -116,13 +117,21 @@ def record_response():
             'sentiment': sentiment
         }
 
-        if not os.path.exists(RESULT_FILE):
+        # 결과 파일이 존재하지 않거나 비어 있으면 초기화
+        if not os.path.exists(RESULT_FILE) or os.stat(RESULT_FILE).st_size == 0:
             result_df = pd.DataFrame(columns=['question_id', 'question', 'response', 'sentiment'])
-        else:
-            result_df = pd.read_csv(RESULT_FILE)
+            result_df.to_csv(RESULT_FILE, index=False)
+            logger.debug('Initialized results.csv with headers.')
 
-        result_df = result_df.append(result_data, ignore_index=True)
-        result_df.to_csv(RESULT_FILE, index=False)
+        # 결과 파일에 데이터 추가
+        try:
+            result_df = pd.read_csv(RESULT_FILE)
+            result_df = pd.concat([result_df, pd.DataFrame([result_data])], ignore_index=True)
+            result_df.to_csv(RESULT_FILE, index=False)
+            logger.debug(f'Result data saved: {result_data}')
+        except Exception as e:
+            logger.exception("An error occurred while writing to the CSV file.")
+            return jsonify({'error': 'CSV 파일 쓰기 중 오류가 발생했습니다.'}), 500
 
         result = {
             'response': response_text,
