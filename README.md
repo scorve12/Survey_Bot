@@ -15,10 +15,10 @@
 ## 기여자 소개 
 |PM 김재호|AI 김재연|AI 최종빈|
 |:---:|:---:|:---:|
-|<img alt="김재호프로필" src="https://avatars.githubusercontent.com/u/153428925?v=4" width="200" height="200">|<img width="200" height="200" alt="김재연프로필" src="https://avatars.githubusercontent.com/u/144209498?v=4">|<img width="200" height="200" alt="최종빈프로필" src="https://avatars.githubusercontent.com/u/48951477?v=4">|
-|- Project Manager | -Main Developer | - Engineer |
-| <img alt="팀 리더" src="https://img.shields.io/badge/Team%20Leader-red"> | <img alt="AI" src="https://img.shields.io/badge/AI Developer-yellow"> | <img alt="백엔드" src="https://img.shields.io/badge/BackEnd-brightgreen"> |
-|[🔗GitHub](https://github.com/scorve12)|[🔗GitHub](https://github.com/computerkingminsu)|[🔗GitHub](https://github.com/jyjnote)|[🔗GitHub](https://github.com/jongbinchoi)|
+|<img alt="김재호프로필" src="https://avatars.githubusercontent.com/u/153428925?v=4" width="200" height="200">|<img width="200" height="200" alt="김재연프로필" src="https://avatars.githubusercontent.com/u/144209498?v=4">|<img width="200" height="200" alt="최종빈프로필" src="https://avatars.githubusercontent.com/u/48951477?v=4">| <img width="200" height="200" alt="이세민프로필" src="https://avatars.githubusercontent.com/u/42165112?v=4">|
+|- Project Manager | -AI Engineer | - AI Engineer |  - AI Engineer |
+| <img alt="팀 리더" src="https://img.shields.io/badge/Team%20Leader-red"> | <img alt="AI" src="https://img.shields.io/badge/AI Developer-yellow"> | <img alt="AI" src="https://img.shields.io/badge/AI Developer-yellow"> | <img alt="AI" src="https://img.shields.io/badge/AI Developer-yellow"> |
+|[🔗GitHub](https://github.com/scorve12)|[🔗GitHub](https://github.com/jyjnote)|[🔗GitHub](https://github.com/jongbinchoi)|[🔗GitHub](https://github.com/AugustvonMackensen)|
 
 <br><br>
 
