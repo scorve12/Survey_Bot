@@ -3,3 +3,5 @@ scipy
 openai-whisper
 transformers
 pandas
+pygame
+flask-cors

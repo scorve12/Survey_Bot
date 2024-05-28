@@ -49,7 +49,7 @@ audio_files = glob.glob(audio_files_pattern)
 response_text = []
 
 # 모든 음성 파일을 순차적으로 재생
-for audio_file in audio_files[:1]:
+for audio_file in audio_files[0:]:
     pygame.mixer.music.load(audio_file)
     pygame.mixer.music.play()
     # 재생이 완료될 때까지 대기

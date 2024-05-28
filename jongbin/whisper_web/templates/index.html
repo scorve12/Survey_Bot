@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음성 설문 조사</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>음성 설문 조사</h1>
+    <button id="start-survey">음성 설문 시작</button>
+    <div class="location">질문</div>
+    <div id="question"></div>
+    <div class="location">응답</div>
+    <div id="response"></div>
+    <div class="location">결과</div>
+    <div id="result"></div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
