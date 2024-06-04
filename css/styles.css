@@ -1,0 +1,126 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#background-image {
+    position: relative;
+    background-image: url("/images/background_main.png");
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-color: #4DB8A6;
+    width: 100vw;
+    height: 100vh;
+    background-size: contain;
+}
+
+.container {
+    position: absolute;
+    left: 50%;
+    bottom: 30vh;
+    transform: translateX(-50%);
+}
+
+#startButton-image {
+    width: 15vw !important;
+    height: auto !important;
+}
+
+/* 설문지 페이지  */
+
+#background2-image {
+    position: relative;
+    background-image: url("/images/backgound2.png");
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-color: #4DB8A6;
+    width: 100vw;
+    height: 100vh;
+    background-size: contain;
+}
+
+#location {
+    display: flex;
+    justify-content: center;
+    padding-top: 5vh;
+}
+
+#surveyTitle {
+    display: flex;
+    font-size: 2.9vw;
+    font-weight: bold;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    padding-top: 12vh;
+}
+
+.questionBox {
+    background-color: aliceblue;
+    height: 65vh;
+    width: 72vh;
+    border-radius: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.question {
+    background-color: white;
+    border: 5px solid #4DB8A6;
+    height: 5.5vh;
+    width: 55vh;
+    border-radius: 55px;
+    margin-bottom: 4vh;
+
+}
+
+.textlocation {
+    display: flex;
+    font-size: 30px;
+    font-weight: bold;
+    justify-content: center;
+    font-size: 12px;
+}
+
+#questionLocation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%; /* 추가 */
+}
+
+#nextButton {
+    width: 20%;
+    height: 20%;
+    
+}
+
+
+/* result 페이지 */
+#location_result {
+    display: flex;
+    justify-content: center;
+    padding-top: 18vh;
+}
+
+#resultTitle {
+    font-size: 2vw;
+    font-weight: bold;
+    color: #4DB8A6;
+}
+
+#resultbox {
+    background-color: white;
+    border: 3px solid #4DB8A6;
+    border-radius: 30px;
+    height: 35vh;
+    width: 55vh;
+}
+
+#againButton {
+    margin-top: 30px;
+}
