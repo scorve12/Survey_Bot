@@ -36,6 +36,21 @@ SENTIMENT_MODEL = config.get('models', 'sentiment_model')
 # 감정 분석 모델 초기화
 classifier = pipeline("text-classification", model=SENTIMENT_MODEL)
 
+def transcribe_with_progress(model, audio_path):
+    import time
+
+    start_time = time.time()
+    result = model.transcribe(audio_path, fp16=False)
+    end_time = time.time()
+
+    response_text = result["text"]
+    elapsed_time = end_time - start_time
+
+    logger.debug(f'Transcription completed in {elapsed_time:.2f} seconds.')
+    logger.debug(f'Transcribed text length: {len(response_text)} characters.')
+
+    return response_text
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -92,10 +107,12 @@ def record_response():
 
         model = whisper.load_model(WHISPER_MODEL)
         warnings.filterwarnings("ignore", message="FP16 is not supported on CPU")
-        result = model.transcribe(temp_audio_file, fp16=False)
 
-        response_text = result["text"]
+        # 여기서 변환 시작
+        logger.debug("Starting transcription with Whisper model.")
+        response_text = transcribe_with_progress(model, temp_audio_file)
         logger.debug(f'Transcribed text: {response_text}')
+
         os.remove(temp_audio_file)  # 임시 오디오 파일 삭제
         os.rmdir(temp_dir)  # 임시 디렉토리 삭제
 
@@ -124,14 +141,11 @@ def record_response():
             logger.debug('Initialized results.csv with headers.')
 
         # 결과 파일에 데이터 추가
-        try:
-            result_df = pd.read_csv(RESULT_FILE)
-            result_df = pd.concat([result_df, pd.DataFrame([result_data])], ignore_index=True)
-            result_df.to_csv(RESULT_FILE, index=False)
-            logger.debug(f'Result data saved: {result_data}')
-        except Exception as e:
-            logger.exception("An error occurred while writing to the CSV file.")
-            return jsonify({'error': 'CSV 파일 쓰기 중 오류가 발생했습니다.'}), 500
+        result_df = pd.read_csv(RESULT_FILE)
+        result_df = pd.concat([result_df, pd.DataFrame([result_data])], ignore_index=True)
+        result_df.to_csv(RESULT_FILE, index=False)
+
+        logger.debug(f'Result data saved: {result_data}')
 
         result = {
             'response': response_text,

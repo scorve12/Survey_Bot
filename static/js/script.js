@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let DURATION; // 기본값 설정을 제거하고 서버에서 값을 가져옵니다.
+  let DURATION;
 
   // 서버에서 설정 값을 가져옵니다.
   fetch("/get_config")
     .then((response) => response.json())
     .then((config) => {
-      DURATION = config.DURATION; // 서버에서 가져온 설정 값을 사용합니다.
+      DURATION = config.DURATION;
       console.log(`DURATION 설정 값: ${DURATION}`);
 
       const startButton = document.getElementById("start-survey");
@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let resultDiv = document.getElementById("result");
             let currentQuestion = 0;
             let totalScore = 0;
+            let mediaRecorder;
+            let stream;
 
             function processNextQuestion() {
               if (currentQuestion < questions.length) {
@@ -56,14 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 audio.play();
 
                 audio.onended = () => {
+                  // 녹음 시작 문구 표시
                   recordingStatusDiv.innerHTML = `<p>질문에 대한 응답을 해주세요.</p>`;
                   console.log("질문에 대한 응답을 해주세요.");
 
                   // 녹음 시작
                   navigator.mediaDevices
                     .getUserMedia({ audio: true })
-                    .then((stream) => {
-                      const mediaRecorder = new MediaRecorder(stream);
+                    .then((str) => {
+                      stream = str;
+                      mediaRecorder = new MediaRecorder(stream);
                       const audioChunks = [];
 
                       mediaRecorder.ondataavailable = (event) => {
@@ -75,6 +79,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         const formData = new FormData();
                         formData.append("audio", audioBlob, "response.wav");
 
+                        // 스트림을 중지하여 녹음을 종료합니다.
+                        stream.getTracks().forEach((track) => track.stop());
+
+                        // 녹음 종료 문구 표시
                         recordingStatusDiv.innerHTML = `<p>녹음을 마칩니다.</p>`;
                         console.log("녹음을 마칩니다.");
 
@@ -115,10 +123,15 @@ document.addEventListener("DOMContentLoaded", () => {
                           });
                       };
 
+                      // 녹음을 시작할 때 바로 녹음을 시작하도록 위치를 조정
                       mediaRecorder.start();
+                      recordingStatusDiv.innerHTML = `<p>녹음을 시작합니다.</p>`;
+                      console.log("녹음을 시작합니다.");
+
+                      // DURATION에 따라 녹음 지속 시간을 설정합니다.
                       setTimeout(() => {
                         mediaRecorder.stop();
-                      }, DURATION * 1000); // 서버에서 가져온 DURATION 값을 사용하여 녹음 지속 시간을 설정합니다.
+                      }, DURATION * 1000); // 서버에서 가져온 DURATION 값을 사용합니다.
                     })
                     .catch((error) => {
                       console.error("Error:", error);
