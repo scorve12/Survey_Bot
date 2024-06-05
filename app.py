@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 import glob
 import os
 import pandas as pd
@@ -10,6 +10,7 @@ import whisper
 import tempfile
 import warnings
 from transformers import pipeline
+import re
 
 app = Flask(__name__)
 
@@ -52,8 +53,16 @@ def transcribe_with_progress(model, audio_path):
     return response_text
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def main():
+    return render_template('main.html')
+
+@app.route('/survey')
+def survey():
+    return render_template('survey.html')
+
+@app.route('/result')
+def result():
+    return render_template('result.html')
 
 @app.route('/get_config', methods=['GET'])
 def get_config():
@@ -74,7 +83,10 @@ def get_questions():
         texts_df = pd.read_csv(TEXTS_FILE)
         texts = texts_df['질문'].tolist()
         
-        logger.debug(f'Loaded {len(texts)} questions')
+        # "질문X:" 형식을 제거
+        clean_texts = [re.sub(r'^질문\d+:\s*', '', text) for text in texts]
+        
+        logger.debug(f'Loaded {len(clean_texts)} questions')
         
         audio_files_pattern = os.path.join(OUTPUT_DIR, '*.mp3')
         audio_files = sorted(glob.glob(audio_files_pattern))
@@ -82,11 +94,11 @@ def get_questions():
         
         logger.debug(f'Found {len(audio_files)} audio files')
 
-        if len(audio_files) != len(texts):
+        if len(audio_files) != len(clean_texts):
             logger.error('음성 파일의 수와 텍스트의 수가 일치하지 않습니다.')
             return jsonify({'error': '음성 파일의 수와 텍스트의 수가 일치하지 않습니다.'}), 400
         
-        questions = [{'question': question, 'audio': audio} for question, audio in zip(texts, audio_files)]
+        questions = [{'question': question, 'audio': audio} for question, audio in zip(clean_texts, audio_files)]
         return jsonify(questions)
     except Exception as e:
         logger.exception("An error occurred while getting questions.")
@@ -122,6 +134,7 @@ def record_response():
         preds = classifier(response_text, top_k=None)
         is_positive = preds[0]['score'] > 0.5
         sentiment = 'positive' if is_positive else 'negative'
+        score = 1 if is_positive else 0  # 긍정인 경우 1점, 부정인 경우 0점
 
         # 결과를 CSV 파일에 저장
         texts_df = pd.read_csv(TEXTS_FILE)
@@ -131,12 +144,13 @@ def record_response():
             'question_id': question_id,
             'question': current_text,
             'response': response_text,
-            'sentiment': sentiment
+            'sentiment': sentiment,
+            'score': score  # 점수 추가
         }
 
         # 결과 파일이 존재하지 않거나 비어 있으면 초기화
         if not os.path.exists(RESULT_FILE) or os.stat(RESULT_FILE).st_size == 0:
-            result_df = pd.DataFrame(columns=['question_id', 'question', 'response', 'sentiment'])
+            result_df = pd.DataFrame(columns=['question_id', 'question', 'response', 'sentiment', 'score'])
             result_df.to_csv(RESULT_FILE, index=False)
             logger.debug('Initialized results.csv with headers.')
 
@@ -149,7 +163,8 @@ def record_response():
 
         result = {
             'response': response_text,
-            'sentiment': sentiment
+            'sentiment': sentiment,
+            'score': score  # 점수 반환
         }
 
         return jsonify(result)
@@ -165,7 +180,7 @@ def final_result():
             return jsonify({'error': '결과 파일이 존재하지 않습니다.'}), 400
 
         result_df = pd.read_csv(RESULT_FILE)
-        total_score = (result_df['sentiment'] == 'positive').sum()
+        total_score = int(result_df['score'].sum())  # 점수 합계 계산
 
         return jsonify({'total_score': total_score})
     except Exception as e:

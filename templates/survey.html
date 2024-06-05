@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>voiceSurvey</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div id="background2-image">
+        <div id="surveyTitle">대인관계 패턴의 자기이해 척도</div>
+        <div id="location">
+            <div class="questionBox">
+                <div id="questionLocation">
+                    <div>
+                        <p class="textlocation">Q. 질문</p>
+                        <div class="questions" id="question"></div>
+                    </div>
+                    <div>
+                        <p class="textlocation">A. 답변</p>
+                        <div class="questions" id="response"></div>
+                    </div>
+                    <div>
+                        <p class="textlocation">R. 녹음상태</p>
+                        <div class="questions" id="recording-status"></div>
+                    </div>
+                </div>
+                <img id="nextButton" src="{{ url_for('static', filename='images/nextButton.png') }}" alt="다음 질문">
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

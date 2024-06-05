@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>설문지 결과</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div id="background2-image">
+        <div id="location_result">
+            <div class="questionBox">
+                <p id="resultTitle">결과</p>
+                <div id="resultbox"></div>
+                <a href="{{ url_for('main') }}">
+                    <img id="againButton" src="/static/images/againButton.png" alt="다시 버튼">
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch('/final_result')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('resultbox').innerHTML = `<p>${data.error}</p>`;
+                    } else {
+                        document.getElementById('resultbox').innerHTML = `<p>총 감정 분석 점수: ${data.total_score}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching final result:", error);
+                    document.getElementById('resultbox').innerHTML = `<p>결과를 불러오는 중 오류가 발생했습니다.</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
