@@ -1,15 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
 body, html {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family:"Jua", sans-serif;
 }
+
+
+  
 
 #background-image {
     position: relative;
     background-image: url("/static/images/background_main.png");
     background-position: top center;
-    background-repeat: no-repeat;
+    /* background-repeat: no-repeat; */
     background-color: #4DB8A6;
     width: 100vw;
     height: 100vh;
@@ -28,8 +33,6 @@ body, html {
     height: auto !important;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-
 
 /* 설문지 페이지  */
 
@@ -69,7 +72,6 @@ body, html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
 }
 
 .questions {
@@ -78,13 +80,12 @@ body, html {
     height: 6.5vh;
     width: 55vh;
     border-radius: 10px;
-    margin-bottom: 3vh;
+    margin-bottom: 2.5vh;
     align-items: center;
-    font-size : 15px;
-    
+    font-size: 15px;
 }
 
-.questions2{
+.questions2 {
     background-color: white;
     border: 5px solid #4DB8A6;
     height: 6.5vh;
@@ -92,8 +93,9 @@ body, html {
     border-radius: 10px;
     margin-bottom: 3vh;
     align-items: center;
-    font-size : 15px;
+    font-size: 15px;
     text-align: center;
+    font-size: 25px;
 }
 
 .textlocation {
@@ -113,9 +115,7 @@ body, html {
 #nextButton {
     width: 20%;
     height: 20%;
-    
 }
-
 
 /* result 페이지 */
 #location_result {
@@ -125,7 +125,7 @@ body, html {
 }
 
 #resultTitle {
-    font-size: 2vw;
+    font-size: 3vw;
     font-weight: bold;
     color: #4DB8A6;
 }
@@ -134,13 +134,308 @@ body, html {
     background-color: white;
     border: 3px solid #4DB8A6;
     border-radius: 30px;
-    height: 35vh;
+    height: 32vh;
     width: 55vh;
     text-align: center;
     justify-content: center;
     align-items: center;
+    font-size: 1.3vw;
+    margin-bottom: 70px;
 }
 
 #againButton {
-    margin-top: 30px;
+    width: 100px;
+    height : 100px;
+    margin-bottom: 100px;
+}
+
+/* 결과값 이모지 */
+.emoji {
+    width: 120px;
+    height: 120px;
+    margin: 15px 15px 40px;
+    background: #ffda6a;
+    display: inline-block;
+    border-radius: 50%;
+    position: relative;
+}
+
+.emoji__face,
+.emoji__eyebrows,
+.emoji__eyes,
+.emoji__mouth {
+    position: absolute;
+}
+
+.emoji__face {
+    width: inherit;
+    height: inherit;
+}
+
+/* yay 이모지 스타일 */
+.emoji--yay:after {
+    position: absolute;
+    bottom: -40px;
+    font-size: 18px;
+    width: 60px;
+    left: calc(50% - 30px);
+    color: #8a8a8a;
+    animation: yay-reverse 1s linear infinite;
+}
+
+.emoji--yay .emoji__face {
+    animation: yay 1s linear infinite alternate;
+}
+
+.emoji--yay .emoji__eyebrows {
+    left: calc(50% - 3px);
+    top: 30px;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: -6px 0 0 0 #000000, -36px 0 0 0px #000000, 6px 0 0 0 #000000, 36px 0 0 0px #000000;
+}
+
+.emoji--yay .emoji__eyebrows:before,
+.emoji--yay .emoji__eyebrows:after {
+    width: 36px;
+    height: 18px;
+    border-radius: 60px 60px 0 0;
+    background: transparent;
+    border: 6px solid black;
+    box-sizing: border-box;
+    border-bottom: 0;
+    bottom: 3px;
+    left: calc(50% - 18px);
+    content: "";
+    position: absolute;
+}
+
+.emoji--yay .emoji__eyebrows:before {
+    margin-left: -21px;
+}
+
+.emoji--yay .emoji__eyebrows:after {
+    margin-left: 21px;
+}
+
+.emoji--yay .emoji__mouth {
+    top: 60px;
+    background: transparent;
+    left: 50%;
+    position: absolute;
+}
+
+.emoji--yay .emoji__mouth:after {
+    width: 80px;
+    height: 80px;
+    left: calc(50% - 40px);
+    top: -75px;
+    border-radius: 50%;
+    background: transparent;
+    border: 6px solid #000000;
+    box-sizing: border-box;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    z-index: 1;
+    content: "";
+    position: absolute;
+}
+
+.emoji--yay .emoji__mouth:before {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+    border-radius: 50%;
+    bottom: 5px;
+    left: calc(50% - 3px);
+    box-shadow: -25px 0 0 0 #000000, 25px 0 0 0 #000000, -35px -2px 30px 10px #d5234c, 35px -2px 30px 10px #d5234c;
+    content: "";
+    position: absolute;
+}
+
+/* sad 이모지 스타일 */
+.emoji--sad:after {
+    position: absolute;
+    bottom: -40px;
+    font-size: 18px;
+    width: 60px;
+    left: calc(50% - 30px);
+    color: #8a8a8a;
+}
+
+.emoji--sad .emoji__face {
+    animation: sad-face 2s ease-in infinite;
+}
+
+.emoji--sad .emoji__eyebrows {
+    left: calc(50% - 3px);
+    top: 35px;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: -40px 9px 0 0 #000000, -25px 0 0 0 #000000, 25px 0 0 0 #000000, 40px 9px 0 0 #000000;
+}
+
+.emoji--sad .emoji__eyebrows:before,
+.emoji--sad .emoji__eyebrows:after {
+    width: 30px;
+    height: 20px;
+    border: 6px solid #000000;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    top: 2px;
+    left: calc(50% - 15px);
+    content: "";
+    position: absolute;
+}
+
+.emoji--sad .emoji__eyebrows:before {
+    margin-left: -30px;
+    transform: rotate(-30deg);
+}
+
+.emoji--sad .emoji__eyebrows:after {
+    margin-left: 30px;
+    transform: rotate(30deg);
+}
+
+.emoji--sad .emoji__eyes {
+    width: 14px;
+    height: 16px;
+    left: calc(50% - 7px);
+    top: 50px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 25px 0 0 0 #000000, -25px 0 0 0 #000000;
+}
+
+.emoji--sad .emoji__eyes:after {
+    background: #548dff;
+    width: 12px;
+    height: 12px;
+    margin-left: 6px;
+    border-radius: 0 100% 40% 50% / 0 50% 40% 100%;
+    transform-origin: 0% 0%;
+    animation: tear-drop 2s ease-in infinite;
+    content: "";
+    position: absolute;
+}
+
+.emoji--sad .emoji__mouth {
+    width: 60px;
+    height: 80px;
+    left: calc(50% - 30px);
+    top: 80px;
+    box-sizing: border-box;
+    border: 6px solid #000000;
+    border-radius: 50%;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    background: transparent;
+    animation: sad-mouth 2s ease-in infinite;
+}
+
+.emoji--sad .emoji__mouth:after {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+    border-radius: 50%;
+    top: 4px;
+    left: calc(50% - 3px);
+    box-shadow: -18px 0 0 0 #000000, 18px 0 0 0 #000000;
+    content: "";
+    position: absolute;
+}
+
+@keyframes yay {
+    25% {
+        transform: rotate(-15deg);
+    }
+    75% {
+        transform: rotate(15deg);
+    }
+}
+
+@keyframes yay-reverse {
+    25% {
+        transform: rotate(15deg);
+    }
+    75% {
+        transform: rotate(-15deg);
+    }
+}
+
+@keyframes sad-face {
+    25%,
+    35% {
+        top: -15px;
+    }
+    55%,
+    95% {
+        top: 10px;
+    }
+    100%,
+    0% {
+        top: 0;
+    }
+}
+
+@keyframes sad-mouth {
+    25%,
+    35% {
+        transform: scale(0.85);
+        top: 70px;
+    }
+    55%,
+    100%,
+    0% {
+        transform: scale(1);
+        top: 80px;
+    }
+}
+
+@keyframes tear-drop {
+    0%,
+    100% {
+        display: block;
+        left: 35px;
+        top: 15px;
+        transform: rotate(45deg) scale(0);
+    }
+    25% {
+        display: block;
+        left: 35px;
+        transform: rotate(45deg) scale(2);
+    }
+    49.9% {
+        display: block;
+        left: 35px;
+        top: 65px;
+        transform: rotate(45deg) scale(0);
+    }
+    50% {
+        display: block;
+        left: -35px;
+        top: 15px;
+        transform: rotate(45deg) scale(0);
+    }
+    75% {
+        display: block;
+        left: -35px;
+        transform: rotate(45deg) scale(2);
+    }
+    99.9% {
+        display: block;
+        left: -35px;
+        top: 65px;
+        transform: rotate(45deg) scale(0);
+    }
 }

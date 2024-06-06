@@ -132,9 +132,7 @@ def record_response():
             return jsonify({'error': '녹음된 내용이 이해되지 않았습니다. 다시 녹음해주세요.'}), 400
 
         preds = classifier(response_text, top_k=None)
-        is_positive = preds[0]['score'] > 0.5
-        sentiment = 'positive' if is_positive else 'negative'
-        score = 1 if is_positive else 0  # 긍정인 경우 1점, 부정인 경우 0점
+        score = preds[0]['score']  # 감정 점수
 
         # 결과를 CSV 파일에 저장
         texts_df = pd.read_csv(TEXTS_FILE)
@@ -144,13 +142,12 @@ def record_response():
             'question_id': question_id,
             'question': current_text,
             'response': response_text,
-            'sentiment': sentiment,
-            'score': score  # 점수 추가
+            'score': score  # 감정 점수 추가
         }
 
         # 결과 파일이 존재하지 않거나 비어 있으면 초기화
         if not os.path.exists(RESULT_FILE) or os.stat(RESULT_FILE).st_size == 0:
-            result_df = pd.DataFrame(columns=['question_id', 'question', 'response', 'sentiment', 'score'])
+            result_df = pd.DataFrame(columns=['question_id', 'question', 'response', 'score'])
             result_df.to_csv(RESULT_FILE, index=False)
             logger.debug('Initialized results.csv with headers.')
 
@@ -163,7 +160,6 @@ def record_response():
 
         result = {
             'response': response_text,
-            'sentiment': sentiment,
             'score': score  # 점수 반환
         }
 
@@ -180,9 +176,10 @@ def final_result():
             return jsonify({'error': '결과 파일이 존재하지 않습니다.'}), 400
 
         result_df = pd.read_csv(RESULT_FILE)
-        total_score = int(result_df['score'].sum())  # 점수 합계 계산
+        average_score = result_df['score'].mean()  # 평균 점수 계산
+        sentiment = '긍정' if average_score > 0.5 else '부정'  # 평균 점수를 기준으로 감정 결과 결정
 
-        return jsonify({'total_score': total_score})
+        return jsonify({'average_score': average_score, 'sentiment': sentiment})
     except Exception as e:
         logger.exception("An error occurred while calculating the final result.")
         return jsonify({'error': str(e)}), 500

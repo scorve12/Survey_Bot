@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <title>설문지 결과</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    
 </head>
 <body>
     <div id="background2-image">
         <div id="location_result">
             <div class="questionBox">
-                <p id="resultTitle">결과</p>
-                <div id="resultbox"></div>
+                <p id="resultTitle">결 과</p>
+                <div id="resultbox">
+                    <div id="emojiContainer"></div>
+                    <p id="averageScoreText"></p>
+                    <p id="sentimentText"></p>
+                </div>
                 <a href="{{ url_for('main') }}">
                     <img id="againButton" src="/static/images/againButton.png" alt="다시 버튼">
                 </a>
@@ -25,7 +30,26 @@
                     if (data.error) {
                         document.getElementById('resultbox').innerHTML = `<p>${data.error}</p>`;
                     } else {
-                        document.getElementById('resultbox').innerHTML = `<p>총 감정 분석 점수: ${data.total_score}</p>`;
+                        if (data.average_score > 0.5) {
+                            document.getElementById('emojiContainer').innerHTML = `
+                                <div class="emoji emoji--yay">
+                                    <div class="emoji__face">
+                                        <div class="emoji__eyebrows"></div>
+                                        <div class="emoji__mouth"></div>
+                                    </div>
+                                </div>`;
+                        } else {
+                            document.getElementById('emojiContainer').innerHTML = `
+                                <div class="emoji emoji--sad">
+                                    <div class="emoji__face">
+                                        <div class="emoji__eyebrows"></div>
+                                        <div class="emoji__eyes"></div>
+                                        <div class="emoji__mouth"></div>
+                                    </div>
+                                </div>`;
+                        }
+                        document.getElementById('averageScoreText').innerText = `평균 감정 분석 점수: ${data.average_score.toFixed(2)}`;
+                        document.getElementById('sentimentText').innerText = `결과: ${data.sentiment}`;
                     }
                 })
                 .catch(error => {
