@@ -92,9 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
                           }
 
                           // 프론트에서 결과를 보여주지만, 다음 질문으로 넘어가면 지워집니다.
-                          responseDiv.innerHTML = ` ${responseData.response} (${
-                            responseData.sentiment
-                          })</p>`;
+                          responseDiv.innerHTML = `<p>${responseData.response} (${responseData.sentiment})</p>`;
                           totalScore +=
                             responseData.sentiment === "positive" ? 1 : 0;
                           currentQuestion++;
