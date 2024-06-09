@@ -40,7 +40,7 @@ def transcribe_with_progress(model, audio_path):
     import time
 
     start_time = time.time()
-    result = model.transcribe(audio_path, fp16=False)
+    result = model.transcribe(audio_path, language='ko')
     end_time = time.time()
 
     response_text = result["text"]
